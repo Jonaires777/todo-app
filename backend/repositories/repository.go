@@ -1,7 +1,22 @@
 package repositories
 
-import "gorm.io/gorm"
+import (
+	"todo-app/repositories/todo"
+	"todo-app/repositories/user"
 
-var (
-	DBConn *gorm.DB
+	"gorm.io/gorm"
 )
+
+type Repository = struct {
+	DB *gorm.DB
+	User user.Repository
+	Todo todo.Repository
+}
+
+func SetupRepository(connection *gorm.DB) *Repository{
+	return &Repository{
+		DB: connection,
+		User: user.NewUserRepository(connection),
+		Todo: todo.NewTodoRepository(connection),
+	}
+}
